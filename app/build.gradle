@@ -1,0 +1,72 @@
+plugins { id 'com.android.application' }
+
+// Optional CI signing. The GitHub Actions workflow sets these variables only when the repository owner has stored a
+// development keystore as repository secrets. Nothing secret is ever written to this repository.
+def ciKeystore = System.getenv('AUTOTUNE_DEV_KEYSTORE')
+
+android {
+    namespace 'com.autotuneeq.mvp'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId 'com.autotuneeq.mvp'
+        minSdk 26
+        targetSdk 35
+        versionCode 7
+        versionName '0.3.4-candidate'
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+    }
+
+    signingConfigs {
+        ci {
+            if (ciKeystore) {
+                storeFile file(ciKeystore)
+                storePassword System.getenv('AUTOTUNE_DEV_KEYSTORE_PASSWORD')
+                keyAlias System.getenv('AUTOTUNE_DEV_KEY_ALIAS') ?: 'autotune-dev'
+                keyPassword System.getenv('AUTOTUNE_DEV_KEY_PASSWORD') ?: System.getenv('AUTOTUNE_DEV_KEYSTORE_PASSWORD')
+            }
+        }
+    }
+
+    buildFeatures { buildConfig true }
+    flavorDimensions += 'capabilities'
+    productFlavors {
+        full { dimension 'capabilities' }
+        lite { dimension 'capabilities'; applicationIdSuffix '.lite' }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+        // Full-feature evaluation build: non-debuggable, same development certificate as debug.
+        // This is NOT a production signing identity or a Play Protect approval.
+        review {
+            initWith release
+            debuggable false
+            signingConfig ciKeystore ? signingConfigs.ci : signingConfigs.debug
+            matchingFallbacks = ['release']
+        }
+        // DIAGNOSTIC ONLY (assembleFullProbe): identical to the Full review build except the
+        // NotificationListenerService declaration is removed from the merged manifest. It exists to isolate,
+        // on the user's own phone, whether that single declaration triggers the Play Protect install block.
+        // It is not a way around the block: it has no song detection and is not offered for distribution.
+        probe {
+            initWith review
+            applicationIdSuffix '.probe'
+            matchingFallbacks = ['review', 'release']
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+
+dependencies {
+    implementation 'androidx.core:core:1.13.1'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.json:json:20240303'
+    androidTestImplementation 'androidx.test:runner:1.6.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+}

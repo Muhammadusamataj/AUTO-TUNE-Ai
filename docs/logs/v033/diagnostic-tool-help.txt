@@ -1,0 +1,23 @@
+usage: collect_install_diagnostics.py [-h] --apk APK [--package PACKAGE]
+                                      [--expected-sha256 EXPECTED_SHA256]
+                                      [--adb ADB] [--serial SERIAL]
+                                      [--out OUT] [--install]
+                                      [--apksigner APKSIGNER]
+
+Collect evidence using normal ADB; never alters verification/security settings
+or uninstalls. Read-only by default. --install explicitly attempts adb install
+-r of the supplied APK. Run on the computer connected to the actual phone, not
+an unrelated emulator.
+
+options:
+  -h, --help            show this help message and exit
+  --apk APK
+  --package PACKAGE
+  --expected-sha256 EXPECTED_SHA256
+  --adb ADB
+  --serial SERIAL       Use adb devices -l to select the actual Vivo phone
+  --out OUT
+  --install             Attempt normal adb install -r; preserves app data
+  --apksigner APKSIGNER
+                        Optional SDK apksigner path for incoming and installed
+                        signer comparison

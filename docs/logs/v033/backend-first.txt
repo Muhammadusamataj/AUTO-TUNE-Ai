@@ -1,0 +1,19 @@
+test_bad_gain_rejected (test_server.ApiTests.test_bad_gain_rejected) ... ok
+test_health (test_server.ApiTests.test_health) ... ok
+test_hostile_gain_types_and_nonfinite (test_server.ApiTests.test_hostile_gain_types_and_nonfinite) ... ok
+test_length_limits_and_source (test_server.ApiTests.test_length_limits_and_source) ... ok
+test_list_payload_is_bad_request (test_server.ApiTests.test_list_payload_is_bad_request) ... ok
+test_missing_api_key_rejected (test_server.ApiTests.test_missing_api_key_rejected) ... ok
+test_missing_artist_rejected (test_server.ApiTests.test_missing_artist_rejected) ... ok
+test_none_payload_is_bad_request (test_server.ApiTests.test_none_payload_is_bad_request) ... ok
+test_normalized_recording_and_distinct_remix (test_server.ApiTests.test_normalized_recording_and_distinct_remix) ... ok
+test_sql_injection_is_data (test_server.ApiTests.test_sql_injection_is_data) ... ok
+test_unicode_token_is_rejected_not_server_error (test_server.ApiTests.test_unicode_token_is_rejected_not_server_error) ... ok
+test_unknown_returns_404 (test_server.ApiTests.test_unknown_returns_404) ... ok
+test_write_fails_closed_without_configured_key (test_server.ApiTests.test_write_fails_closed_without_configured_key) ... ok
+test_write_then_lookup (test_server.ApiTests.test_write_then_lookup) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.719s
+
+OK

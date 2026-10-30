@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.6.1">
+    <issue id="NewApi" severity="Error" message="Call requires API level 27" category="Correctness"/>
+</issues>

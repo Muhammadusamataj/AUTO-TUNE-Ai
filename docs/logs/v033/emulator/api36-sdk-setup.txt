@@ -1,0 +1,6 @@
+Warning: This version only understands SDK XML versions up to 3 but an SDK XML file of version 4 was encountered. This can happen if you use versions of Android Studio and the command-line tools that were released at different times.
+Warning: Observed package id 'platforms;android-35' in inconsistent location '/workspace/tooling/android-sdk/platforms/android-35-2' (Expected '/workspace/tooling/android-sdk/platforms/android-35')
+Warning: Already observed package id 'platforms;android-35' in '/workspace/tooling/android-sdk/platforms/android-35'. Skipping duplicate at '/workspace/tooling/android-sdk/platforms/android-35-2'
+Warning: Observed package id 'platforms;android-35' in inconsistent location '/workspace/tooling/android-sdk/platforms/android-35-2' (Expected '/workspace/tooling/android-sdk/platforms/android-35')
+Warning: Already observed package id 'platforms;android-35' in '/workspace/tooling/android-sdk/platforms/android-35'. Skipping duplicate at '/workspace/tooling/android-sdk/platforms/android-35-2'
+

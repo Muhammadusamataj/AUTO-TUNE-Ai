@@ -1,0 +1,4 @@
+PASS: profile clamp, JSON roundtrip, FFT summary, safe gain limits, invalid input
+PASS: cut-only gain, hardware limits, interpolation, identity normalization
+PASS: simulated EQ restore, association checks, apply/enable failures, denied/lost control cleanup (hardware untested)
+PASS: early OPEN retained, retry/back-off, bounded drop, spoofed CLOSE ignored, capacity/TTL (hardware untested)

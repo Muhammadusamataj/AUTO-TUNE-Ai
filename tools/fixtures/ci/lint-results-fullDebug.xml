@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.6.1">
+    <issue id="SetTextI18n" severity="Warning" message="Do not concatenate text displayed with setText" category="Internationalization"/>
+    <issue id="GradleDependency" severity="Warning" message="A newer version is available" category="Correctness"/>
+</issues>

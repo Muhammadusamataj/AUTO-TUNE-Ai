@@ -1,0 +1,9 @@
+test_generic_screenshot_is_not_a_diagnosis (test_install_diagnostics.ClassificationTests.test_generic_screenshot_is_not_a_diagnosis) ... ok
+test_primary_failure_not_nested_cause (test_install_diagnostics.ClassificationTests.test_primary_failure_not_nested_cause) ... ok
+test_real_adb_failure_classes (test_install_diagnostics.ClassificationTests.test_real_adb_failure_classes) ... ok
+test_success_is_scoped_to_adb_not_play_protect (test_install_diagnostics.ClassificationTests.test_success_is_scoped_to_adb_not_play_protect) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.001s
+
+OK

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.autotuneeq.mvp.CoreRegressionTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-29T17:26:51" hostname="2b317267b5c7" time="0.043">
+  <properties/>
+  <testcase name="hostileProfilesRejectedWithRealJson" classname="com.autotuneeq.mvp.CoreRegressionTest" time="0.011"/>
+  <testcase name="spectrumNeverGeneratesEqEvenForExtremeInput" classname="com.autotuneeq.mvp.CoreRegressionTest" time="0.01"/>
+  <testcase name="positiveOnlyHardwareRejected" classname="com.autotuneeq.mvp.CoreRegressionTest" time="0.0"/>
+  <testcase name="endpointCannotSmuggleQueryOrCredentials" classname="com.autotuneeq.mvp.CoreRegressionTest" time="0.002"/>
+  <testcase name="logInterpolationAndHeadroom" classname="com.autotuneeq.mvp.CoreRegressionTest" time="0.008"/>
+  <testcase name="flatAndAllCutsPreserveHeadroom" classname="com.autotuneeq.mvp.CoreRegressionTest" time="0.0"/>
+  <testcase name="reversedHardwareRejected" classname="com.autotuneeq.mvp.CoreRegressionTest" time="0.0"/>
+  <testcase name="recordingIdentityIsConservativeAndUnambiguous" classname="com.autotuneeq.mvp.CoreRegressionTest" time="0.009"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

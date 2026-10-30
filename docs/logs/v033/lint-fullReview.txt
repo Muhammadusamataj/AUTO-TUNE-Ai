@@ -1,0 +1,59 @@
+/workspace/AutoTuneEQ_v0_3_3/app/src/main/AndroidManifest.xml:5: Warning: The attribute android:dataExtractionRules only applies for Android 12 and higher; since minSdkVersion is API 26 you should also set android:fullBackupContent [DataExtractionRules]
+    <application android:icon="@drawable/ic_launcher" android:dataExtractionRules="@xml/data_extraction_rules"
+                                                                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "DataExtractionRules":
+   Before Android 12, the attributes android:allowBackup and
+   android:fullBackupContent were used to configure all forms of backup,
+   including cloud backups, device-to-device transfers and adb backup.
+
+   In Android 12 and higher, these attributes have been deprecated and will
+   only apply to cloud backups. You should instead use the attribute
+   android:dataExtractionRules, specifying an @xml resource that configures
+   which files to back up, for cloud backups and for device-to-device
+   transfers, separately. If your minSdkVersion supports older versions,
+   you'll still want to specify an android:fullBackupContent resource if the
+   default behavior is not right for your app.
+
+   https://developer.android.com/about/versions/12/backup-restore#xml-changes
+   https://goo.gle/DataExtractionRules
+
+/workspace/AutoTuneEQ_v0_3_3/app/src/full/java/com/autotuneeq/mvp/MainActivity.java:136: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+        stopTone.setOnClickListener(v -> { tone.stop(); toneStatus.setText("Own-session EQ stopped"); });
+                                                                           ~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/AutoTuneEQ_v0_3_3/app/src/full/java/com/autotuneeq/mvp/MainActivity.java:149: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+                    manualLabels[index].setText(Profile.CENTERS_HZ[index]+" Hz     "+String.format(Locale.US,"%+.1f dB",db));
+                                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/AutoTuneEQ_v0_3_3/app/src/full/java/com/autotuneeq/mvp/MainActivity.java:149: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+                    manualLabels[index].setText(Profile.CENTERS_HZ[index]+" Hz     "+String.format(Locale.US,"%+.1f dB",db));
+                                                                          ~~~~~~~~~~
+/workspace/AutoTuneEQ_v0_3_3/app/src/full/java/com/autotuneeq/mvp/MainActivity.java:156: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+            manualLabels[i].setText(Profile.CENTERS_HZ[i]+" Hz     +0.0 dB");
+                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/AutoTuneEQ_v0_3_3/app/src/full/java/com/autotuneeq/mvp/MainActivity.java:156: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+            manualLabels[i].setText(Profile.CENTERS_HZ[i]+" Hz     +0.0 dB");
+                                                          ~~~~~~~~~~~~~~~~~
+/workspace/AutoTuneEQ_v0_3_3/app/src/full/java/com/autotuneeq/mvp/MainActivity.java:260: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+            sourceText.setText((s.artist.isEmpty()?"":s.artist+" · ")+(s.player.isEmpty()?"No active media session":s.player));
+                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/AutoTuneEQ_v0_3_3/app/src/full/java/com/autotuneeq/mvp/MainActivity.java:265: Warning: Do not concatenate text displayed with setText. Use resource string with placeholders. [SetTextI18n]
+            profileText.setText(s.profile.describe()+"\nSource: "+s.profile.source);
+                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/workspace/AutoTuneEQ_v0_3_3/app/src/full/java/com/autotuneeq/mvp/MainActivity.java:276: Warning: String literal in setText can not be translated. Use Android resources instead. [SetTextI18n]
+    @Override protected void onPause() { h.removeCallbacks(refresh); tone.stop(); toneStatus.setText("Own-session EQ stopped"); super.onPause(); }
+                                                                                                     ~~~~~~~~~~~~~~~~~~~~~~~~
+
+   Explanation for issues of type "SetTextI18n":
+   When calling TextView#setText
+   * Never call Number#toString() to format numbers; it will not handle
+   fraction separators and locale-specific digits properly. Consider using
+   String#format with proper format specifications (%d or %f) instead.
+   * Do not pass a string literal (e.g. "Hello") to display text. Hardcoded
+   text can not be properly translated to other languages. Consider using
+   Android resource strings instead.
+   * Do not build messages by concatenating text chunks. Such messages can not
+   be properly translated.
+
+   https://developer.android.com/guide/topics/resources/localization.html
+
+0 errors, 9 warnings

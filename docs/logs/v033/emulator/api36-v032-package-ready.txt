@@ -1,0 +1,3 @@
+Performing Streamed Install
+adb: failed to install /workspace/deliverables/AutoTuneEQ-0.3.2/AutoTuneEQ-0.3.2-full-android8.apk: Error: device is still booting.
+

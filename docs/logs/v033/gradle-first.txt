@@ -1,0 +1,300 @@
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preFullReviewBuild UP-TO-DATE
+> Task :app:generateFullReviewBuildConfig
+> Task :app:javaPreCompileFullReview
+> Task :app:checkFullReviewAarMetadata
+> Task :app:generateFullReviewResValues
+> Task :app:mapFullReviewSourceSetPaths
+> Task :app:generateFullReviewResources
+> Task :app:packageFullReviewResources
+> Task :app:mergeFullReviewResources
+> Task :app:createFullReviewCompatibleScreenManifests
+> Task :app:parseFullReviewLocalResources
+> Task :app:extractDeepLinksFullReview
+> Task :app:processFullReviewMainManifest
+> Task :app:processFullReviewManifest
+> Task :app:extractProguardFiles
+> Task :app:processFullReviewManifestForPackage
+> Task :app:mergeFullReviewJniLibFolders
+> Task :app:mergeFullReviewNativeLibs NO-SOURCE
+> Task :app:stripFullReviewDebugSymbols NO-SOURCE
+> Task :app:extractFullReviewNativeSymbolTables NO-SOURCE
+> Task :app:mergeFullReviewNativeDebugMetadata NO-SOURCE
+> Task :app:checkFullReviewDuplicateClasses
+> Task :app:desugarFullReviewFileDependencies
+> Task :app:mergeFullReviewStartupProfile
+> Task :app:processFullReviewResources
+> Task :app:mergeExtDexFullReview
+
+> Task :app:compileFullReviewJavaWithJavac
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :app:generateFullReviewLintVitalReportModel
+> Task :app:dexBuilderFullReview
+> Task :app:lintVitalAnalyzeFullReview
+> Task :app:lintVitalReportFullReview SKIPPED
+> Task :app:lintVitalFullReview SKIPPED
+> Task :app:mergeFullReviewArtProfile
+> Task :app:mergeFullReviewGlobalSynthetics
+> Task :app:mergeDexFullReview
+> Task :app:mergeFullReviewShaders
+> Task :app:compileFullReviewShaders NO-SOURCE
+> Task :app:generateFullReviewAssets UP-TO-DATE
+> Task :app:mergeFullReviewAssets
+> Task :app:compressFullReviewAssets
+> Task :app:extractFullReviewVersionControlInfo
+> Task :app:processFullReviewJavaRes NO-SOURCE
+> Task :app:compileFullReviewArtProfile
+> Task :app:optimizeFullReviewResources
+> Task :app:collectFullReviewDependencies
+> Task :app:sdkFullReviewDependencyData
+> Task :app:validateSigningFullReview
+> Task :app:writeFullReviewAppMetadata
+> Task :app:writeFullReviewSigningConfigVersions
+> Task :app:preLiteReviewBuild UP-TO-DATE
+> Task :app:generateLiteReviewBuildConfig
+> Task :app:javaPreCompileLiteReview
+> Task :app:checkLiteReviewAarMetadata
+> Task :app:generateLiteReviewResValues
+> Task :app:mapLiteReviewSourceSetPaths
+> Task :app:mergeFullReviewJavaResource
+> Task :app:generateLiteReviewResources
+> Task :app:mergeLiteReviewResources
+> Task :app:packageLiteReviewResources
+> Task :app:parseLiteReviewLocalResources
+> Task :app:createLiteReviewCompatibleScreenManifests
+> Task :app:extractDeepLinksLiteReview
+> Task :app:processLiteReviewMainManifest
+> Task :app:processLiteReviewManifest
+> Task :app:processLiteReviewManifestForPackage
+> Task :app:processLiteReviewResources
+
+> Task :app:compileLiteReviewJavaWithJavac
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :app:packageFullReview
+> Task :app:createFullReviewApkListingFileRedirect
+> Task :app:assembleFullReview
+> Task :app:generateLiteReviewLintVitalReportModel
+> Task :app:mergeLiteReviewJniLibFolders
+> Task :app:mergeLiteReviewNativeLibs NO-SOURCE
+> Task :app:stripLiteReviewDebugSymbols NO-SOURCE
+> Task :app:extractLiteReviewNativeSymbolTables NO-SOURCE
+> Task :app:mergeLiteReviewNativeDebugMetadata NO-SOURCE
+> Task :app:checkLiteReviewDuplicateClasses
+> Task :app:lintVitalAnalyzeLiteReview
+> Task :app:dexBuilderLiteReview
+> Task :app:lintVitalReportLiteReview SKIPPED
+> Task :app:lintVitalLiteReview SKIPPED
+> Task :app:desugarLiteReviewFileDependencies
+> Task :app:mergeLiteReviewStartupProfile
+> Task :app:mergeLiteReviewArtProfile
+> Task :app:mergeLiteReviewGlobalSynthetics
+> Task :app:mergeExtDexLiteReview
+> Task :app:mergeLiteReviewShaders
+> Task :app:compileLiteReviewShaders NO-SOURCE
+> Task :app:generateLiteReviewAssets UP-TO-DATE
+> Task :app:mergeLiteReviewAssets
+> Task :app:compressLiteReviewAssets
+> Task :app:extractLiteReviewVersionControlInfo
+> Task :app:processLiteReviewJavaRes NO-SOURCE
+> Task :app:mergeDexLiteReview
+> Task :app:compileLiteReviewArtProfile
+> Task :app:optimizeLiteReviewResources
+> Task :app:collectLiteReviewDependencies
+> Task :app:mergeLiteReviewJavaResource
+> Task :app:sdkLiteReviewDependencyData
+> Task :app:validateSigningLiteReview
+> Task :app:writeLiteReviewAppMetadata
+> Task :app:writeLiteReviewSigningConfigVersions
+> Task :app:preFullDebugBuild UP-TO-DATE
+> Task :app:mergeFullDebugNativeDebugMetadata NO-SOURCE
+> Task :app:generateFullDebugBuildConfig
+> Task :app:javaPreCompileFullDebug
+> Task :app:checkFullDebugAarMetadata
+> Task :app:generateFullDebugResValues
+> Task :app:mapFullDebugSourceSetPaths
+> Task :app:generateFullDebugResources
+> Task :app:mergeFullDebugResources
+> Task :app:packageFullDebugResources
+> Task :app:parseFullDebugLocalResources
+> Task :app:createFullDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksFullDebug
+> Task :app:processFullDebugMainManifest
+> Task :app:processFullDebugManifest
+> Task :app:processFullDebugManifestForPackage
+> Task :app:processFullDebugResources
+
+> Task :app:compileFullDebugJavaWithJavac
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :app:packageLiteReview
+> Task :app:createLiteReviewApkListingFileRedirect
+> Task :app:assembleLiteReview
+> Task :app:mergeFullDebugShaders
+> Task :app:compileFullDebugShaders NO-SOURCE
+> Task :app:generateFullDebugAssets UP-TO-DATE
+> Task :app:mergeFullDebugAssets
+> Task :app:compressFullDebugAssets
+> Task :app:checkFullDebugDuplicateClasses
+> Task :app:desugarFullDebugFileDependencies
+> Task :app:dexBuilderFullDebug
+> Task :app:mergeFullDebugGlobalSynthetics
+> Task :app:mergeExtDexFullDebug
+> Task :app:processFullDebugJavaRes NO-SOURCE
+> Task :app:mergeLibDexFullDebug
+> Task :app:mergeProjectDexFullDebug
+> Task :app:mergeFullDebugJniLibFolders
+> Task :app:mergeFullDebugNativeLibs NO-SOURCE
+> Task :app:stripFullDebugDebugSymbols NO-SOURCE
+> Task :app:validateSigningFullDebug
+> Task :app:writeFullDebugAppMetadata
+> Task :app:writeFullDebugSigningConfigVersions
+> Task :app:preLiteDebugBuild UP-TO-DATE
+> Task :app:mergeLiteDebugNativeDebugMetadata NO-SOURCE
+> Task :app:generateLiteDebugBuildConfig
+> Task :app:javaPreCompileLiteDebug
+> Task :app:checkLiteDebugAarMetadata
+> Task :app:generateLiteDebugResValues
+> Task :app:mapLiteDebugSourceSetPaths
+> Task :app:generateLiteDebugResources
+> Task :app:mergeFullDebugJavaResource
+> Task :app:mergeLiteDebugResources
+> Task :app:packageLiteDebugResources
+> Task :app:parseLiteDebugLocalResources
+> Task :app:createLiteDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksLiteDebug
+> Task :app:processLiteDebugMainManifest
+> Task :app:processLiteDebugManifest
+> Task :app:processLiteDebugManifestForPackage
+> Task :app:packageFullDebug
+> Task :app:createFullDebugApkListingFileRedirect
+> Task :app:assembleFullDebug
+> Task :app:mergeLiteDebugShaders
+> Task :app:compileLiteDebugShaders NO-SOURCE
+> Task :app:generateLiteDebugAssets UP-TO-DATE
+> Task :app:mergeLiteDebugAssets
+> Task :app:compressLiteDebugAssets
+> Task :app:checkLiteDebugDuplicateClasses
+> Task :app:desugarLiteDebugFileDependencies
+> Task :app:processLiteDebugResources
+
+> Task :app:compileLiteDebugJavaWithJavac
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+
+> Task :app:mergeLibDexLiteDebug
+> Task :app:mergeExtDexLiteDebug
+> Task :app:dexBuilderLiteDebug
+> Task :app:processLiteDebugJavaRes NO-SOURCE
+> Task :app:mergeLiteDebugGlobalSynthetics
+> Task :app:mergeProjectDexLiteDebug
+> Task :app:mergeLiteDebugJniLibFolders
+> Task :app:mergeLiteDebugNativeLibs NO-SOURCE
+> Task :app:stripLiteDebugDebugSymbols NO-SOURCE
+> Task :app:validateSigningLiteDebug
+> Task :app:writeLiteDebugAppMetadata
+> Task :app:writeLiteDebugSigningConfigVersions
+> Task :app:bundleFullDebugClassesToRuntimeJar
+> Task :app:bundleFullDebugClassesToCompileJar
+> Task :app:preFullDebugUnitTestBuild UP-TO-DATE
+> Task :app:javaPreCompileFullDebugUnitTest
+> Task :app:mergeLiteDebugJavaResource
+> Task :app:compileFullDebugUnitTestJavaWithJavac
+> Task :app:processFullDebugUnitTestJavaRes NO-SOURCE
+> Task :app:testFullDebugUnitTest
+> Task :app:bundleLiteDebugClassesToRuntimeJar
+> Task :app:packageLiteDebug
+> Task :app:createLiteDebugApkListingFileRedirect
+> Task :app:assembleLiteDebug
+> Task :app:preLiteDebugUnitTestBuild UP-TO-DATE
+> Task :app:bundleLiteDebugClassesToCompileJar
+> Task :app:javaPreCompileLiteDebugUnitTest
+> Task :app:processLiteDebugUnitTestJavaRes NO-SOURCE
+> Task :app:compileLiteDebugUnitTestJavaWithJavac
+> Task :app:testLiteDebugUnitTest
+> Task :app:preFullDebugAndroidTestBuild SKIPPED
+> Task :app:processFullDebugAndroidTestManifest
+> Task :app:generateFullDebugAndroidTestBuildConfig
+> Task :app:javaPreCompileFullDebugAndroidTest
+> Task :app:checkFullDebugAndroidTestAarMetadata
+> Task :app:generateFullDebugAndroidTestResValues
+> Task :app:mapFullDebugAndroidTestSourceSetPaths
+> Task :app:generateFullDebugAndroidTestResources
+> Task :app:mergeFullDebugAndroidTestShaders
+> Task :app:mergeFullDebugAndroidTestResources
+> Task :app:compileFullDebugAndroidTestShaders NO-SOURCE
+> Task :app:generateFullDebugAndroidTestAssets UP-TO-DATE
+> Task :app:mergeFullDebugAndroidTestAssets
+> Task :app:compressFullDebugAndroidTestAssets
+> Task :app:checkFullDebugAndroidTestDuplicateClasses
+> Task :app:desugarFullDebugAndroidTestFileDependencies
+> Task :app:processFullDebugAndroidTestResources
+> Task :app:mergeExtDexFullDebugAndroidTest
+> Task :app:compileFullDebugAndroidTestJavaWithJavac
+> Task :app:dexBuilderFullDebugAndroidTest
+> Task :app:mergeFullDebugAndroidTestGlobalSynthetics
+> Task :app:processFullDebugAndroidTestJavaRes NO-SOURCE
+> Task :app:mergeLibDexFullDebugAndroidTest
+> Task :app:mergeProjectDexFullDebugAndroidTest
+> Task :app:mergeFullDebugAndroidTestJniLibFolders
+> Task :app:mergeFullDebugAndroidTestNativeLibs NO-SOURCE
+> Task :app:stripFullDebugAndroidTestDebugSymbols NO-SOURCE
+> Task :app:mergeFullDebugAndroidTestJavaResource
+> Task :app:validateSigningFullDebugAndroidTest
+> Task :app:writeFullDebugAndroidTestSigningConfigVersions
+> Task :app:generateFullDebugAndroidTestLintModel
+> Task :app:generateFullDebugLintReportModel
+> Task :app:generateFullDebugUnitTestLintModel
+> Task :app:packageFullDebugAndroidTest
+> Task :app:createFullDebugAndroidTestApkListingFileRedirect
+> Task :app:assembleFullDebugAndroidTest
+> Task :app:lintAnalyzeFullDebugAndroidTest
+> Task :app:lintAnalyzeFullDebugUnitTest
+> Task :app:preLiteDebugAndroidTestBuild SKIPPED
+> Task :app:generateLiteDebugAndroidTestResValues
+> Task :app:generateLiteDebugAndroidTestLintModel
+> Task :app:generateLiteDebugLintReportModel
+> Task :app:generateLiteDebugUnitTestLintModel
+> Task :app:lintAnalyzeLiteDebug
+> Task :app:lintAnalyzeLiteDebugAndroidTest
+> Task :app:lintAnalyzeFullDebug
+> Task :app:lintAnalyzeLiteDebugUnitTest
+
+> Task :app:lintReportFullDebug
+Wrote HTML report to file:///workspace/AutoTuneEQ_v0_3_3/app/build/reports/lint-results-fullDebug.html
+
+> Task :app:lintFullDebug
+> Task :app:generateFullReviewLintReportModel
+
+> Task :app:lintReportLiteDebug
+Wrote HTML report to file:///workspace/AutoTuneEQ_v0_3_3/app/build/reports/lint-results-liteDebug.html
+
+> Task :app:lintLiteDebug
+> Task :app:preFullReviewUnitTestBuild UP-TO-DATE
+> Task :app:bundleFullReviewClassesToCompileJar
+> Task :app:generateFullReviewUnitTestLintModel
+> Task :app:lintAnalyzeFullReviewUnitTest
+> Task :app:generateLiteReviewLintReportModel
+> Task :app:bundleLiteReviewClassesToCompileJar
+> Task :app:preLiteReviewUnitTestBuild UP-TO-DATE
+> Task :app:generateLiteReviewUnitTestLintModel
+> Task :app:lintAnalyzeLiteReview
+> Task :app:lintAnalyzeLiteReviewUnitTest
+
+> Task :app:lintReportLiteReview
+Wrote HTML report to file:///workspace/AutoTuneEQ_v0_3_3/app/build/reports/lint-results-liteReview.html
+
+> Task :app:lintLiteReview
+> Task :app:lintAnalyzeFullReview
+
+> Task :app:lintReportFullReview
+Wrote HTML report to file:///workspace/AutoTuneEQ_v0_3_3/app/build/reports/lint-results-fullReview.html
+
+> Task :app:lintFullReview
+
+BUILD SUCCESSFUL in 47s
+216 actionable tasks: 216 executed

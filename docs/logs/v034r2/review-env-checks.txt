@@ -1,0 +1,36 @@
+== compile full/lite vs API 35 and 26 (errors at API 26 must only be SDK_INT-guarded symbols)
+-- full vs android-35.jar
+classes: 53
+-- full vs android-26.jar
+full/java/com/autotuneeq/mvp/MainActivity.java:119: error: cannot find symbol
+  symbol:   variable POST_NOTIFICATIONS
+full/java/com/autotuneeq/mvp/MainActivity.java:120: error: cannot find symbol
+  symbol:   variable POST_NOTIFICATIONS
+full/java/com/autotuneeq/mvp/MonitorService.java:70: error: cannot find symbol
+  symbol: method getSentFromUid()
+full/java/com/autotuneeq/mvp/SongMonitor.java:47: error: cannot find symbol
+  symbol:   method isNotificationListenerAccessGranted(ComponentName)
+classes: 28
+-- lite vs android-35.jar
+classes: 31
+-- lite vs android-26.jar
+classes: 31
+== JUnit-shim tests (full source set)
+RESULT passed=37 failed=0
+== standalone Java programs
+PASS: profile clamp, JSON roundtrip, FFT summary, safe gain limits, invalid input
+PASS: cut-only gain, hardware limits, interpolation, identity normalization
+PASS: simulated EQ restore, association checks, apply/enable failures, denied/lost control cleanup (hardware untested)
+PASS: early OPEN retained, retry/back-off, bounded drop, spoofed CLOSE ignored, capacity/TTL (hardware untested)
+PASS: early OPEN, pause/resume/buffering, neutral track switch, player switch/back, CLOSE, access/stop cleanup, retry and conflicts (simulated hardware)
+== identity parity (Java vs Python)
+code-point scan: 24700 cases, 0 mismatches
+realistic YouTube-style noise: 5213 cases, 0 mismatches
+PARITY OK
+== backend + tools
+Ran 16 tests in 0.569s
+
+OK
+Ran 17 tests in 0.011s
+
+OK

@@ -1,0 +1,9 @@
+# 0.3.4 candidate — change list (relative to the supplied 0.3.3 source)
+Version 0.3.4-candidate, versionCode 7. A unified diff is delivered as `AutoTuneEQ-0.3.4-vs-0.3.3.patch`.
+* **Lite:** blind A/B listening check on the app's own tone (`AbSession`, `AbRig`, `AbTonePlayer`, `EqController.ownedTestCut/ownedBypass/ownedBandFreqsHz`, `LiteActivity`): level-matched identical tone pairs, one hardware band cut by 6 dB vs bypass, null trials, read-back diagnostics, distortion question, restoration check, clipboard report. Tone amplitude hard-capped at -18 dBFS; nominal -30 dBFS at mid frequencies.
+* **Both:** `MissCache` (6 h negative lookup cache, Full only), `CachePolicy` + `ProfileStore.putManual` (manual profiles pinned), `CloudClient.NOT_FOUND_MESSAGE`.
+* **Full:** Visualizer only while the UI is visible; lock-screen-private notification; legacy global EQ rewritten only on profile change; `PlayerSupport` status line (evidence-based, YouTube reported unsupported until an event is seen); disclosure dialog explains Android 13+ restricted settings and has an "Open app info" button.
+* **Diagnostics:** new build type `probe` + `app/src/fullProbe/AndroidManifest.xml` (Full without the notification listener) for a one-variable Play Protect experiment; `tools/review-shim/` reproducible compile/test harness.
+* **Tests:** +10 JUnit-style tests (`AbAndCacheTest`, `PlayerSupportTest`), +1 instrumented class (`StoreCacheTest`), `TestEqController` extended with fault injection for the new hooks (`ignoreBandWrites`).
+* **Docs:** Android 16 install diagnostics, security/permission comparison, Play distribution checklist, privacy policy draft, device test instructions, Phase 1 verification.
+* **Unchanged on purpose:** manifests of Lite and Full (no permission added or removed), signing configuration, target/min SDK.

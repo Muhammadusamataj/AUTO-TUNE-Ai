@@ -1,0 +1,14 @@
+patching file app/src/main/java/com/autotuneeq/mvp/EqController.java
+patching file app/src/main/java/com/autotuneeq/mvp/MonitorService.java
+patching file app/src/main/java/com/autotuneeq/mvp/SessionHints.java
+patching file app/src/main/java/com/autotuneeq/mvp/SongMonitor.java
+patching file server/server.py
+patching file tests/java/com/autotuneeq/mvp/TestSessionHints.java
+patching file tests/run_core_java_tests.sh
+MATCH patch vs ZIP: app/src/main/java/com/autotuneeq/mvp/EqController.java
+MATCH patch vs ZIP: app/src/main/java/com/autotuneeq/mvp/MonitorService.java
+MATCH patch vs ZIP: app/src/main/java/com/autotuneeq/mvp/SessionHints.java
+MATCH patch vs ZIP: app/src/main/java/com/autotuneeq/mvp/SongMonitor.java
+MATCH patch vs ZIP: server/server.py
+MATCH patch vs ZIP: tests/java/com/autotuneeq/mvp/TestSessionHints.java
+MATCH patch vs ZIP: tests/run_core_java_tests.sh

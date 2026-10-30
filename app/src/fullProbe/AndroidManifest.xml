@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DIAGNOSTIC overlay for the Full "probe" build type only (variant fullProbe). -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <application android:label="AutoTune EQ AI Full PROBE (no listener)" tools:replace="android:label">
+        <service android:name=".MediaNotificationListener" tools:node="remove"/>
+    </application>
+</manifest>

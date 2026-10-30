@@ -1,0 +1,215 @@
+name: Android build and verify
+
+# Builds Lite, FullProbe and Full evaluation APKs, runs Gradle unit tests and lint, verifies the merged manifests,
+# and uploads the APKs + SHA-256 checksums + logs as downloadable workflow artifacts.
+# No secret or signing key is stored in this repository. Optional stable signing: see docs/GITHUB_ACTIONS_GUIDE.md.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-build-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Empty when the repository has no such secrets (and always empty for pull requests from forks).
+  AUTOTUNE_DEV_KEYSTORE_PASSWORD: ${{ secrets.AUTOTUNE_DEV_KEYSTORE_PASSWORD }}
+  AUTOTUNE_DEV_KEY_ALIAS: ${{ secrets.AUTOTUNE_DEV_KEY_ALIAS }}
+  AUTOTUNE_DEV_KEY_PASSWORD: ${{ secrets.AUTOTUNE_DEV_KEY_PASSWORD }}
+
+jobs:
+  source-checks:
+    name: Source-level checks (no Android SDK needed)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/wrapper-validation@v6
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Run source-level checks
+        shell: bash
+        run: |
+          mkdir -p ci-logs
+          {
+            echo "== backend tests";            python3 -m unittest discover -s server -v
+            echo "== tool tests";               python3 -m unittest discover -s tools -p 'test_*.py' -v
+            echo "== simulated-effect Java regression programs"; bash tests/run_core_java_tests.sh
+            echo "== Java/Python identity parity (full code-point scan)"; python3 tools/identity_parity_fuzz.py --full
+          } 2>&1 | tee ci-logs/source-checks.txt
+
+      - name: Upload source-check log
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: source-check-log-${{ github.run_number }}
+          path: ci-logs/
+          if-no-files-found: warn
+          retention-days: 30
+
+  android:
+    name: Build APKs, unit tests, lint
+    needs: source-checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Make the Gradle wrapper executable (zip/Windows uploads can drop the executable bit)
+        run: chmod +x gradlew
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Install SDK packages used by AGP 8.6.1 / compileSdk 35
+        shell: bash
+        run: |
+          yes | sdkmanager --licenses > /dev/null || true
+          sdkmanager --install "platform-tools" "platforms;android-35" "build-tools;34.0.0" "cmdline-tools;latest"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Use a stable development keystore if the owner stored one as secrets
+        env:
+          DEV_KEYSTORE_B64: ${{ secrets.AUTOTUNE_DEV_KEYSTORE_B64 }}
+        shell: bash
+        run: |
+          if [ -n "$DEV_KEYSTORE_B64" ] && [ -n "$AUTOTUNE_DEV_KEYSTORE_PASSWORD" ]; then
+            printf '%s' "$DEV_KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/autotune-dev.jks"
+            echo "AUTOTUNE_DEV_KEYSTORE=$RUNNER_TEMP/autotune-dev.jks" >> "$GITHUB_ENV"
+            echo "SIGNING_MODE=stable development keystore from repository secrets" >> "$GITHUB_ENV"
+          else
+            echo "SIGNING_MODE=throwaway debug key generated on this runner (different certificate every run)" >> "$GITHUB_ENV"
+          fi
+
+      - name: Unit tests (Full and Lite)
+        shell: bash
+        run: |
+          mkdir -p ci-logs
+          ./gradlew --stacktrace testFullDebugUnitTest testLiteDebugUnitTest 2>&1 | tee ci-logs/gradle-unit-tests.txt
+
+      - name: Lint (debug and review variants)
+        shell: bash
+        run: |
+          ./gradlew --stacktrace lintFullDebug lintLiteDebug lintFullReview lintLiteReview 2>&1 | tee ci-logs/gradle-lint.txt
+
+      - name: Assemble Lite, FullProbe and Full APKs; compile instrumented-test APKs
+        shell: bash
+        run: |
+          ./gradlew --stacktrace assembleLiteReview assembleFullProbe assembleFullReview \
+            assembleFullDebugAndroidTest assembleLiteDebugAndroidTest 2>&1 | tee ci-logs/gradle-assemble.txt
+
+      - name: Collect APKs
+        shell: bash
+        run: |
+          mkdir -p dist
+          pick() { f=$(find "$1" -name '*.apk' -type f 2>/dev/null | head -n 1); [ -n "$f" ] || { echo "::error::no APK found in $1"; exit 1; }; cp "$f" "dist/$2"; }
+          pick app/build/outputs/apk/lite/review   AutoTuneEQ-Lite-review.apk
+          pick app/build/outputs/apk/full/probe    AutoTuneEQ-FullProbe-review.apk
+          pick app/build/outputs/apk/full/review   AutoTuneEQ-Full-review.apk
+          ls -l dist
+
+      - name: Verify APK signatures and certificates
+        shell: bash
+        run: |
+          APKSIGNER="$ANDROID_HOME/build-tools/34.0.0/apksigner"
+          : > dist/SIGNING.txt
+          for apk in dist/*.apk; do
+            echo "== $apk" >> dist/SIGNING.txt
+            "$APKSIGNER" verify --verbose --print-certs "$apk" >> dist/SIGNING.txt 2>&1
+          done
+          cat dist/SIGNING.txt
+
+      - name: Verify merged manifests (Lite / Full / FullProbe expectations)
+        shell: bash
+        run: |
+          mkdir -p dist/manifests
+          APKANALYZER="$ANDROID_HOME/cmdline-tools/latest/bin/apkanalyzer"
+          "$APKANALYZER" manifest print dist/AutoTuneEQ-Lite-review.apk      > dist/manifests/lite.xml
+          "$APKANALYZER" manifest print dist/AutoTuneEQ-Full-review.apk      > dist/manifests/full.xml
+          "$APKANALYZER" manifest print dist/AutoTuneEQ-FullProbe-review.apk > dist/manifests/probe.xml
+          python3 tools/verify_manifests.py --lite dist/manifests/lite.xml --full dist/manifests/full.xml \
+            --probe dist/manifests/probe.xml --summary-md "$GITHUB_STEP_SUMMARY" | tee dist/manifest-verification.txt
+
+      - name: Checksums, build info and job summary
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_NUMBER: ${{ github.run_number }}
+        shell: bash
+        run: |
+          (cd dist && sha256sum ./*.apk | sed 's# \./# #' > SHA256SUMS.txt)
+          {
+            echo "AutoTune EQ AI evaluation build"
+            echo "commit:   $COMMIT_SHA"
+            echo "run:      $RUN_ID (#$RUN_NUMBER)"
+            echo "signing:  $SIGNING_MODE"
+            echo "java:     $(java -version 2>&1 | head -n 1)"
+            echo "gradle:   $(grep distributionUrl gradle/wrapper/gradle-wrapper.properties)"
+            echo "built:    $(date -u +%FT%TZ)"
+            echo "These APKs are evaluation builds. They are not Google-approved, not a production signing identity,"
+            echo "and installation/audio behaviour is unverified until tested on a device."
+          } > dist/BUILD_INFO.txt
+          {
+            echo "## APK build"
+            echo
+            echo "Signing: **$SIGNING_MODE**"
+            echo
+            echo '```'; cat dist/SHA256SUMS.txt; echo '```'
+            echo
+            echo "Evaluation builds only: not Google-approved; install/audio behaviour unverified until tested on a device."
+            case "$SIGNING_MODE" in throwaway*) echo; echo "> Each run signs with a new key. To update an already installed copy, uninstall it first (or set up the optional stable keystore secrets).";; esac
+          } >> "$GITHUB_STEP_SUMMARY"
+          python3 tools/ci_summary.py --tests app/build/test-results --lint app/build/reports --out "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload APKs, checksums and manifests
+        uses: actions/upload-artifact@v7
+        with:
+          name: autotuneeq-apks-${{ github.run_number }}
+          path: |
+            dist/*.apk
+            dist/SHA256SUMS.txt
+            dist/BUILD_INFO.txt
+            dist/SIGNING.txt
+            dist/manifest-verification.txt
+            dist/manifests/*.xml
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload test results, lint reports and logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: autotuneeq-reports-${{ github.run_number }}
+          path: |
+            ci-logs/
+            app/build/test-results/
+            app/build/reports/
+          if-no-files-found: warn
+          retention-days: 30

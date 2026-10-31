@@ -35,6 +35,10 @@ public final class MonitorService extends Service {
     public static volatile String fftStatus = "FFT unavailable · stopped";
     public static volatile String globalStatus="Legacy EQ disabled";
     public static volatile boolean uiVisible=false;
+    /** Human-readable recommendation for the current song (basis, confidence, reasons); empty when no song. */
+    public static volatile String recommendationText="";
+    /** What was suggested for the current song, for preference learning: genre class + band values (null if none). */
+    public static volatile String suggestedClass=null; public static volatile double[] suggestedDb=null; public static volatile String suggestedSongKey="";
     public static volatile String playerSupportText="";
     private final PlayerSupport support=new PlayerSupport();
     private boolean fftRunning, lastUiVisible;
@@ -323,9 +327,17 @@ public final class MonitorService extends Service {
                     state=new State(song.title,song.artist,song.player,"Profile found · saved offline",cached,state.levels,true,eq.isGlobalRunning());
                     applyEnabledEffects(cached);
                 } else {
-                    state=new State(song.title,song.artist,song.player,"Profile not found · neutral; FFT is diagnostic only",
-                            Profile.flat(),state.levels,true,eq.isGlobalRunning());
-                    applyEnabledEffects(Profile.flat());
+                    Recommender.Query query=new Recommender.Query(); query.title=song.title; query.artist=song.artist; query.genre=song.genre;
+                    final Recommender.Recommendation rec=Recommender.recommend(query,settings.preferences());
+                    final boolean autoApplied=settings.autoApplyGenre() && rec.basis==Recommender.Basis.GENRE_PRESET && rec.confidence>=0.4;
+                    suggestedClass=rec.genreClass; suggestedDb=rec.profile.db.clone(); suggestedSongKey=song.key();
+                    recommendationText="Suggestion: "+(rec.basis==Recommender.Basis.GENRE_PRESET?rec.preset.label+" preset":"neutral")+" · confidence "+rec.confidenceLabel()
+                            +(rec.basis==Recommender.Basis.GENRE_PRESET?(autoApplied?" · applied automatically":" · NOT applied (auto-apply is off)"):"")+"\n"+rec.explanation();
+                    diag.event("recommend",lastSongRef+" basis="+rec.basis+" confidence="+rec.confidenceLabel()+" applied="+autoApplied);
+                    final Profile startProfile=autoApplied?rec.profile:Profile.flat();
+                    state=new State(song.title,song.artist,song.player,autoApplied?"Genre suggestion applied ("+rec.preset.label+") · lookup pending":"Profile not found · neutral; FFT is diagnostic only",
+                            startProfile,state.levels,true,eq.isGlobalRunning());
+                    applyEnabledEffects(startProfile);
                     String endpoint=store.endpoint();
                     final String errKey=song.key();
                     if (!endpoint.isEmpty() && (store.recentMiss(song.title,song.artist) || cloudErrors.isMiss(errKey,SystemClock.elapsedRealtime()))) {
@@ -348,7 +360,7 @@ public final class MonitorService extends Service {
                         } else {
                             if(CloudClient.NOT_FOUND_MESSAGE.equals(message)) store.recordMiss(song.title,song.artist);
                             else cloudErrors.record(errKey,SystemClock.elapsedRealtime());
-                            replaceState(message+" · safe neutral fallback",null,eq.isGlobalRunning());
+                            replaceState(message+(autoApplied?" · genre suggestion kept":" · safe neutral fallback"),autoApplied?rec.profile:null,eq.isGlobalRunning());
                         }
                     }));
                 }

@@ -12,9 +12,13 @@ import json
 import os
 import sqlite3
 import re
+import sys
 import unicodedata
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlparse
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))   # server.py may be loaded by path (tests, tools)
+import identity_case_table  # generated, frozen Unicode 10 lower-casing shared with the Android app
 
 DB_PATH = os.getenv("AUTOTUNEEQ_DB", os.path.join(os.path.dirname(__file__), "profiles.sqlite3"))
 KEY = os.getenv("AUTOTUNEEQ_API_KEY", "")
@@ -57,7 +61,9 @@ def validate_bands(raw):
 
 def _whitespace(text):
     """NFC and collapse every whitespace/separator (same set as TrackIdentity.whitespace in the app)."""
-    return " ".join(unicodedata.normalize("NFC", text).split())
+    if identity_case_table.nfc_safe(text):   # NFC only for text whose characters all existed in Unicode 9.0
+        text = unicodedata.normalize("NFC", text)
+    return " ".join(text.split())
 
 _PROMO_WORD = (r"(?:official\s+(?:music\s+|lyric\s+|hd\s+)?video|official\s+audio"
                r"|official\s+visuali[sz]er|official\s+lyrics?(?:\s+video)?|lyrics?(?:\s+video)?|visuali[sz]er"
@@ -69,8 +75,8 @@ _TOPIC_SUFFIX = re.compile(r"\s*[-\u2013\u2014]\s*topic\s*$", _FLAGS)
 _ARTIST_PREFIX_REST = re.compile(r"^\s+[-\u2013\u2014]\s+(\S.*)$", re.A)
 
 def _lower(s):
-    """Lower-case and fold final sigma (its context rule differs from Java's toLowerCase)."""
-    return s.lower().replace("\u03c2", "\u03c3")
+    """Frozen Unicode 10 simple lower-casing + final-sigma fold (identity_case_table), same as IdentityCase.lower in the app."""
+    return identity_case_table.lower(s)
 
 def canonical_artist(text):
     s = _TOPIC_SUFFIX.sub("", _whitespace(text), count=1)

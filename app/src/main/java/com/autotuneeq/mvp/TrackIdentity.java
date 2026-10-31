@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 /**
  * Conservative identity normalization shared (rule for rule) with server/server.py.
+ * Case mapping uses the frozen table in IdentityCase (generated), so keys are identical on every Android/JDK/Python version.
  * It removes only upload/packaging noise (promo suffixes, a "Artist - " prefix that repeats the artist field,
  * a YouTube " - Topic" channel suffix). It never merges remixes, live versions, remasters, edits or features.
  * Any change here must be mirrored in server.py and re-checked with the Java/Python differential fuzz.
@@ -42,10 +43,12 @@ public final class TrackIdentity {
     private static final Pattern TOPIC_SUFFIX = Pattern.compile("\\s*[-\u2013\u2014]\\s*topic\\s*$", Pattern.CASE_INSENSITIVE);
     private static final Pattern ARTIST_PREFIX_REST = Pattern.compile("^\\s+[-\u2013\u2014]\\s+(\\S.*)$");
 
-    /** NFC, every Unicode/ASCII whitespace or separator (incl. U+001C-001F, U+0085) collapsed to one space. */
+    /** NFC (Unicode-9-assigned text only), every Unicode/ASCII whitespace or separator (incl. U+001C-001F, U+0085) collapsed to one space. */
     static String whitespace(String input) {
-        return trimSpaces(java.text.Normalizer.normalize(input == null ? "" : input,
-                java.text.Normalizer.Form.NFC).replaceAll("[\\s\\p{Z}\\u001c-\\u001f\\u0085]+", " "));
+        String in = input == null ? "" : input;
+        // NFC only for text whose characters all existed in Unicode 9.0; newer characters may normalise differently per runtime.
+        if (IdentityCase.nfcSafe(in)) in = java.text.Normalizer.normalize(in, java.text.Normalizer.Form.NFC);
+        return trimSpaces(in.replaceAll("[\\s\\p{Z}\\u001c-\\u001f\\u0085]+", " "));
     }
     /** Strip only U+0020. String.trim() would also drop other control characters, which Python's strip() keeps. */
     private static String trimSpaces(String s) {
@@ -60,8 +63,8 @@ public final class TrackIdentity {
         s = TOPIC_SUFFIX.matcher(s).replaceFirst("");
         return lower(WHITESPACE.matcher(trimSpaces(s)).replaceAll(" "));
     }
-    /** Lower-case with ROOT locale and fold final sigma, whose context rule differs between Java and Python. */
-    private static String lower(String s) { return s.toLowerCase(Locale.ROOT).replace('\u03c2', '\u03c3'); }
+    /** Frozen Unicode 10 simple lower-casing + final-sigma fold (IdentityCase); never the runtime's own, version-dependent tables. */
+    private static String lower(String s) { return IdentityCase.lower(s); }
 
     public static String canonicalTitle(String title, String artist) {
         String s = whitespace(title);

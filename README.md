@@ -1,6 +1,6 @@
-> **0.3.4 candidate, revision 2.** Build the APKs with GitHub Actions: see `docs/GITHUB_ACTIONS_GUIDE.md` (workflow `.github/workflows/android-build.yml`, never run yet). What was and was not verified: `docs/BUILD_AND_TEST_REPORT.md`; source audit: `docs/SOURCE_AUDIT_0_3_4.md`; changes: `docs/CHANGELOG.md`; device tests: `docs/DEVICE_TEST_INSTRUCTIONS.md`. No Gradle build, APK, install or audible-EQ result exists yet for this revision.
+> **Status: 0.3.4 candidate + stages 1–3.** Not a release: no Gradle build, APK, install or audible-EQ result exists for this code yet. Start with `docs/GAP_ANALYSIS_AND_PLAN.md`, `docs/TEST_MATRIX.md` and `docs/CI_DIAGNOSIS_PARITY.md`. Build via GitHub Actions: `docs/GITHUB_ACTIONS_GUIDE.md`. UI preview (design mockup, not the Android app): `preview/AutoTuneEQ-UI-Preview.html`.
 
-# AutoTune EQ AI 0.3.3 candidate
+# AutoTune EQ AI (0.3.4 candidate line)
 
 This candidate continues the supplied Claude H1–H3 source, with additional session-lifecycle fixes and explicit Full/Lite product flavors. **Android 8.0 / API 26 minimum, target/compile SDK 35.** No final-release, universal third-party EQ, trained-AI or audible-effect claim is made.
 

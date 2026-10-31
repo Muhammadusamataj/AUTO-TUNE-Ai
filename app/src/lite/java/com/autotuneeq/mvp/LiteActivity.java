@@ -17,6 +17,9 @@ public final class LiteActivity extends Activity {
     private TextView status;
     private final SeekBar[] sliders=new SeekBar[5];
     private ProfileStore store;
+    private AppSettings settings;
+    private boolean applyingPreset;
+    private TextView presetLabel;
     private CloudClient cloud;
     private ToneEngine tone;
     private int request;
@@ -26,7 +29,7 @@ public final class LiteActivity extends Activity {
     private TextView abStatus; private Button abFirst,abSecond,abSame,abRestore,abCopy,abStop;
     private final StringBuilder report=new StringBuilder();
     @Override public void onCreate(Bundle b) {
-        super.onCreate(b); store=new ProfileStore(this); cloud=new CloudClient();
+        super.onCreate(b); store=new ProfileStore(this); settings=new AppSettings(this); cloud=new CloudClient();
         tone=new ToneEngine(text -> status.setText(text));
         ScrollView scroll=new ScrollView(this); LinearLayout root=new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL); root.setPadding(24,24,24,24); scroll.addView(root); setContentView(scroll);
@@ -38,19 +41,31 @@ public final class LiteActivity extends Activity {
         label(root,"Android 8.0+ · Manual profiles and this app's own quiet test tone. No automatic song detection, notification access, audio capture, external-player EQ or background monitor.",16);
         title=input(root,"Song title (enter manually)",""); artist=input(root,"Artist (enter manually)","");
         status=label(root,"Own-session EQ stopped · audible effect unverified",16);
+        label(root,"PRESETS (starting points, not listening-test results)",16);
+        presetLabel=label(root,"Selected: Flat",14);
+        HorizontalScrollView presetScroll=new HorizontalScrollView(this); LinearLayout presetRow=new LinearLayout(this);
+        presetRow.setOrientation(LinearLayout.HORIZONTAL); presetScroll.addView(presetRow); root.addView(presetScroll);
+        for(Presets preset:Presets.values()) {
+            Button pb=new Button(this); pb.setText(preset.label); pb.setAllCaps(false); pb.setMinHeight(56);
+            pb.setOnClickListener(v -> applyPreset(preset,true)); presetRow.addView(pb);
+        }
         for(int i=0;i<5;i++) {
             final int index=i; TextView level=label(root,Profile.CENTERS_HZ[i]+" Hz: 0.0 dB",16);
             SeekBar slider=new SeekBar(this); slider.setMax(60); slider.setProgress(30); sliders[i]=slider;
             slider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 public void onProgressChanged(SeekBar s,int p,boolean user) {
                     level.setText(Profile.CENTERS_HZ[index]+" Hz: "+((p-30)/10.0)+" dB");
-                    if(user) { request++; cloud.cancel(); tone.setProfile(profile()); }
+                    if(user && !applyingPreset) {
+                        request++; cloud.cancel(); Profile now=profile(); tone.setProfile(now);
+                        settings.setCustomValues(now.db); settings.setSelectedPreset(Presets.CUSTOM); presetLabel.setText("Selected: Custom (your own values)");
+                    }
                 }
                 public void onStartTrackingTouch(SeekBar s) { }
                 public void onStopTrackingTouch(SeekBar s) { }
             }); root.addView(slider);
         }
         label(root,"Sliders are relative -3…+3 dB; hardware response shifts down to cut-only (up to 6 dB attenuation). No mastering AI or universal player control.",16);
+        applyPreset(settings.selectedPreset(),false);   // restore the last selected preset / custom values
         button(root,"Play quiet own test tone + slider EQ",() -> tone.play(profile()));
         button(root,"Stop test tone",() -> tone.stop());
         button(root,"Save manual profile offline",() -> {
@@ -99,6 +114,15 @@ public final class LiteActivity extends Activity {
     private String artist() { return artist.getText().toString().trim(); }
     private boolean identity() {
         if(title().isEmpty() || artist().isEmpty()) { status.setText("Enter song title and artist first"); return false; } return true;
+    }
+    private void applyPreset(Presets preset,boolean persist) {
+        double[] v=preset==Presets.CUSTOM?settings.customValues():preset.db();
+        applyingPreset=true;
+        try { for(int i=0;i<5;i++) sliders[i].setProgress(30+(int)Math.round(v[i]*10)); } finally { applyingPreset=false; }
+        if(persist) settings.setSelectedPreset(preset);
+        tone.setProfile(profile());
+        presetLabel.setText("Selected: "+preset.label+(preset==Presets.CUSTOM?" (your own values)":""));
+        if(persist) status.setText("Preset "+preset.label+" · "+profile().describe()+" · audible effect unverified");
     }
     private Profile profile() {
         double[] values=new double[5]; for(int i=0;i<5;i++) values[i]=(sliders[i].getProgress()-30)/10.0;

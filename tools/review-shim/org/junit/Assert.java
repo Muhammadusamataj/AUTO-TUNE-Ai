@@ -9,6 +9,9 @@ public class Assert {
   public static void assertNull(Object o){ if(o!=null) throw new AssertionError("expected null: "+o); }
   public static void assertNotNull(Object o){ if(o==null) throw new AssertionError("expected non-null"); }
   public static void assertEquals(long a,long b){ if(a!=b) throw new AssertionError("expected "+a+" got "+b); }
+  public static void assertEquals(String m,long a,long b){ if(a!=b) throw new AssertionError(m+": expected "+a+" got "+b); }
+  public static void assertEquals(String m,Object a,Object b){ if(!(a==null?b==null:a.equals(b))) throw new AssertionError(m+": expected "+a+" got "+b); }
+  public static void assertEquals(String m,double a,double b,double d){ if(!(Math.abs(a-b)<=d)) throw new AssertionError(m+": expected "+a+" got "+b); }
   public static void assertEquals(Object a,Object b){ if(!(a==null?b==null:a.equals(b))) throw new AssertionError("expected "+a+" got "+b); }
   public static void assertEquals(double a,double b,double d){ if(!(Math.abs(a-b)<=d)) throw new AssertionError("expected "+a+" got "+b+" (delta "+d+")"); }
   public static void assertNotEquals(String m,Object a,Object b){ if(a==null?b==null:a.equals(b)) throw new AssertionError(m+": values should differ: "+a); }

@@ -20,3 +20,12 @@ Revision 2 contains real fixes on top of the revision-1 archive, so it is labell
 
 ## 0.3.4-candidate, revision 1
 Blind A/B listening check (Lite), negative lookup cache, pinned manual profiles, Visualizer only while visible, private lock-screen notification, probe build type, documentation set. See `CHANGES_0_3_4.md`.
+
+## Stage 1–3 on top of 0.3.4 rev2 (this change set)
+* **CI parity fix:** frozen Unicode-10 lower-casing and Unicode-9 NFC domain shared by app and server; generator + `--check`; fuzz now covers every code point and combining-mark order (see `CI_DIAGNOSIS_PARITY.md`).
+* UTF-8 `javac` in scripts; workflow table check; repository cleanup.
+* New engines with tests: `Presets`, `ProfileExchange` (validated JSON import/export), `Recommender` + `PreferenceModel` (rule-based, bounded local learning), `IdentityCase`.
+* Lite: preset buttons, selected preset / custom values restored at start. Full: genre metadata, recommendation text with confidence and reasons, optional auto-apply (default off), "not for me" / reset, learning only from an explicit Save.
+* `AppSettings`: preset selection, custom values, auto-apply switch, preference model.
+* `preview/`: interactive UI mockup + 24 renders (clearly labelled as a mockup).
+* Docs: `GAP_ANALYSIS_AND_PLAN.md`, `TEST_MATRIX.md`, `ANDROID_AUDIO_RESTRICTIONS.md`, `CI_DIAGNOSIS_PARITY.md`.

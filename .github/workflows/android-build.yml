@@ -51,7 +51,8 @@ jobs:
             echo "== backend tests";            python3 -m unittest discover -s server -v
             echo "== tool tests";               python3 -m unittest discover -s tools -p 'test_*.py' -v
             echo "== simulated-effect Java regression programs"; bash tests/run_core_java_tests.sh
-            echo "== Java/Python identity parity (full code-point scan)"; python3 tools/identity_parity_fuzz.py --full
+            echo "== frozen identity tables are up to date";    python3 tools/gen_identity_table.py --check
+            echo "== Java/Python identity parity (every Unicode code point, this runner's JDK and Python)"; python3 tools/identity_parity_fuzz.py --full
           } 2>&1 | tee ci-logs/source-checks.txt
 
       - name: Upload source-check log

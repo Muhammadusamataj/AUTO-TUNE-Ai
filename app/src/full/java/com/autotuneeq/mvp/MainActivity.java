@@ -40,13 +40,16 @@ public final class MainActivity extends Activity {
     private final TextView[] manualLabels = new TextView[5];
     private ToneEngine tone;
     private ProfileStore store;
+    private AppSettings settings;
+    private TextView suggestionText;
+    private Button autoGenreButton;
     private String shownKey="";
     private String lastStatus="";
     private int dp(float val) { return (int)(val * getResources().getDisplayMetrics().density + .5f); }
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        store=new ProfileStore(this);
+        store=new ProfileStore(this); settings=new AppSettings(this);
         tone=new ToneEngine(message -> { if(toneStatus!=null) toneStatus.setText(message); });
         getWindow().setStatusBarColor(BG);
         getWindow().setNavigationBarColor(BG);
@@ -168,8 +171,16 @@ public final class MainActivity extends Activity {
             if (s.artist.isEmpty() && (s.title.equals("No song detected") || s.title.equals("No playing song detected"))) {
                 toast("Detect a playing song first"); return;
             }
-            boolean ok=store.putManual(s.title,s.artist,new Profile(manualValues(),"saved custom EQ"));
-            if (ok) { action(MonitorService.ACTION_RELOAD_PROFILE); toast("Saved for: "+s.title); }
+            double[] chosen=manualValues();
+            boolean ok=store.putManual(s.title,s.artist,new Profile(chosen,"saved custom EQ"));
+            if (ok) {
+                // Preference learning: only from an explicit save, and only if a genre suggestion was shown for this very song.
+                String cls=MonitorService.suggestedClass; double[] suggested=MonitorService.suggestedDb;
+                if (cls!=null && suggested!=null && TrackIdentity.key(s.title,s.artist).equals(MonitorService.suggestedSongKey)) {
+                    PreferenceModel m=settings.preferences(); m.learn(cls,suggested,chosen); settings.setPreferences(m);
+                }
+                action(MonitorService.ACTION_RELOAD_PROFILE); toast("Saved for: "+s.title);
+            }
             else toast("Could not save profile");
         });
         add(edit,save,0);
@@ -219,6 +230,22 @@ public final class MainActivity extends Activity {
         Button globalOff=button("STOP global EQ experiment",false);
         globalOff.setOnClickListener(v -> action(MonitorService.ACTION_GLOBAL_OFF));
         add(experimental,globalOff,0);
+        LinearLayout suggestion=card(root);
+        add(suggestion,text("AUTOTUNE SUGGESTION (rule-based, not a trained model)",14,WHITE,true),6);
+        suggestionText=text("No song yet.",12,MUTED,false); add(suggestion,suggestionText,8);
+        autoGenreButton=button("",false);
+        autoGenreButton.setOnClickListener(v -> { settings.setAutoApplyGenre(!settings.autoApplyGenre()); showAutoGenre(); });
+        add(suggestion,autoGenreButton,6); showAutoGenre();
+        Button notForMe=button("Not for me (halve what I taught it)",false);
+        notForMe.setOnClickListener(v -> {
+            String cls=MonitorService.suggestedClass;
+            if(cls==null) { toast("No genre suggestion to rate."); return; }
+            PreferenceModel m=settings.preferences(); m.thumbsDown(cls); settings.setPreferences(m); toast("Learned offsets for "+cls+" halved.");
+        });
+        add(suggestion,notForMe,6);
+        Button resetLearning=button("Reset everything it learned",false);
+        resetLearning.setOnClickListener(v -> { PreferenceModel m=settings.preferences(); m.reset(); settings.setPreferences(m); toast("Preference learning reset."); });
+        add(suggestion,resetLearning,0);
         LinearLayout diagnostics=card(root);
         add(diagnostics,text("DIAGNOSTICS",14,WHITE,true),6);
         add(diagnostics,text("Events from the monitor service (permissions, players, sessions, lookup outcomes). Kept in memory only; it never contains song titles or artists (songs appear as salted references).",12,MUTED,false),8);
@@ -269,6 +296,9 @@ public final class MainActivity extends Activity {
     private void setSliders(Profile p) {
         for (int i=0;i<5;i++) if (manual[i]!=null) manual[i].setProgress(30+(int)Math.round(p.db[i]*10));
     }
+    private void showAutoGenre() {
+        autoGenreButton.setText("Apply genre suggestions automatically: "+(settings.autoApplyGenre()?"ON":"OFF"));
+    }
     private void toast(String message) { Toast.makeText(this,message,Toast.LENGTH_LONG).show(); }
     private final Runnable refresh=new Runnable() {
         @Override public void run() {
@@ -281,6 +311,7 @@ public final class MainActivity extends Activity {
                     +(s.global?"\n"+MonitorService.globalStatus:"");
             if(!status.equals(lastStatus)) { statusText.setText(status); lastStatus=status; }
             profileText.setText(s.profile.describe()+"\nSource: "+s.profile.source);
+            suggestionText.setText(MonitorService.recommendationText.isEmpty()?"No song yet.":MonitorService.recommendationText);
             spectrum.setLevels(s.levels);
             String key=s.artist+"|"+s.title;
             if(!key.equals(shownKey)) {

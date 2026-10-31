@@ -17,7 +17,10 @@ import java.util.List;
 public final class SongMonitor {
     public static final class Song {
         public final String title, artist, player;
-        public Song(String t,String a,String p) { title=t; artist=a; player=p; }
+        /** Genre text from the player's own metadata when it provides one (often empty); used locally only, never sent anywhere. */
+        public final String genre;
+        public Song(String t,String a,String p) { this(t,a,p,""); }
+        public Song(String t,String a,String p,String g) { title=t; artist=a; player=p; genre=g==null?"":g; }
         public String key() { return TrackIdentity.key(title,artist); }
         public String playbackKey() { return key()+"|"+player; }
     }
@@ -107,7 +110,9 @@ public final class SongMonitor {
                 if(title==null || title.trim().isEmpty()) continue;
                 String artist=m.getString(MediaMetadata.METADATA_KEY_ARTIST);
                 if(artist==null || artist.trim().isEmpty()) artist=m.getString(MediaMetadata.METADATA_KEY_ALBUM_ARTIST);
-                selected=new Song(title.trim(),artist==null?"":artist.trim(),player);
+                String genre=m.getString(MediaMetadata.METADATA_KEY_GENRE);
+                if(genre!=null && genre.length()>80) genre=genre.substring(0,80);
+                selected=new Song(title.trim(),artist==null?"":artist.trim(),player,genre==null?"":genre.trim());
             }
             return new Snapshot(selected,player,retained);
         } catch(RuntimeException e) { detach(); return new Snapshot(null,"",null); }
